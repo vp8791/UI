@@ -1,0 +1,162 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.cust.note</groupId>
+	<artifactId>cust-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0</version>
+	<name>Parent of all cust test modules</name>
+
+	<properties>
+		<hibernate-core-version>4.2.1.Final</hibernate-core-version>
+		<hibernate-validator-version>4.3.0.Final</hibernate-validator-version>
+		<hibernate-entitymgr-version>4.2.1.Final</hibernate-entitymgr-version>
+		<validation-api-version>1.0.0.GA</validation-api-version>
+		<spring-webmvc-version>3.2.2.RELEASE</spring-webmvc-version>
+		<spring-data-jpa-version>1.3.2.RELEASE</spring-data-jpa-version>
+		<javax.servlet-version>3.0.1</javax.servlet-version>
+		<jstl-version>1.2</jstl-version>
+		<slf4j-version>1.7.7</slf4j-version>
+		<junit-version>4.11</junit-version>
+		<hamcrest-version>1.3</hamcrest-version>
+		<h2-version>1.4.191</h2-version>
+		<log4j-version>1.2.17</log4j-version>
+		<java-version>1.7</java-version>
+		<spring-test-version>3.2.3.RELEASE</spring-test-version>
+		<mockito-test-version>1.9.5</mockito-test-version>
+		<compiler-plugin-version>2.3.2</compiler-plugin-version>
+	</properties>
+
+	<modules>
+		<module>cust-dao</module>
+		<module>cust-services</module>
+		<module>cust-master</module>
+	</modules>
+
+	<dependencies>
+
+		<!-- slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+			<scope>test</scope>
+
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring-test-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-test-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler-plugin-version}</version>
+				<configuration>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>add-integration-test-sources</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<!-- Configures the source directory of our integration tests -->
+							<sources>
+								<source>src/it/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<!-- Add a new resource directory to our build -->
+					<execution>
+						<id>add-integration-test-resources</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<!-- Configures the resource directory of our integration tests -->
+							<resources>
+								<!-- Placeholders that are found from the files located in the configured 
+									resource directories are replaced with the property values found from the 
+									profile specific configuration file. -->
+								<resource>
+									<filtering>true</filtering>
+									<directory>src/it/resources</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18</version>
+				<configuration>
+					<!-- Excludes integration tests when unit tests are run -->
+					<excludes>
+						<exclude>**/IT*.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.18</version>
+				<executions>
+					<!-- Invokes both the integration-test and the verify goals of the Failsafe 
+						Maven plugin -->
+					<execution>
+						<id>integration-tests</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
